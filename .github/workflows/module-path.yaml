@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - trim
 
 permissions:
   contents: read
@@ -12,12 +12,12 @@ jobs:
   module-path:
     runs-on: ubuntu-latest
     env:
-      OLD_PATH: github.com/pion/ice/v4
-      NEW_PATH: github.com/netbirdio/ice/v4
+      OLD_PATH: github.com/(pion|netbirdio)/ice/v4
+      NEW_PATH: github.com/BakeLab/ice/v4
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Module line uses the NetBird path
+      - name: Module line uses the BakeLab path
         run: |
           if ! grep -qx "module ${NEW_PATH}" go.mod; then
             echo "go.mod must declare 'module ${NEW_PATH}'"
@@ -28,7 +28,7 @@ jobs:
         run: |
           # A leftover import still compiles because Go fetches the upstream
           # module as a dependency, so a merge from upstream can bring one back.
-          if grep -rIn --include='*.go' --include='go.mod' --exclude-dir=.git -e "${OLD_PATH}" .; then
+          if grep -rIEn --include='*.go' --include='go.mod' --exclude-dir=.git -e "${OLD_PATH}" .; then
             echo "found ${OLD_PATH}: rewrite it to ${NEW_PATH}"
             exit 1
           fi

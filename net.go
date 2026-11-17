@@ -8,7 +8,7 @@ import (
 	"net/netip"
 
 	"github.com/pion/logging"
-	"github.com/pion/transport/v3"
+	"github.com/pion/transport/v4"
 )
 
 // The conditions of invalidation written below are defined in

@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/pion/stun/v3"
-	"github.com/pion/transport/v3/test"
+	"github.com/pion/transport/v4/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -120,7 +120,7 @@ func TestUDPMux(t *testing.T) { //nolint:cyclop
 			require.NoError(t, udpMux.Close())
 
 			// Can't create more connections
-			_, err = udpMux.GetConn("failufrag", udpMux.LocalAddr())
+			_, err = udpMux.GetConn("failufrag", udpMux.LocalAddr(), "candidate-fail")
 			require.Error(t, err)
 		})
 	}
@@ -129,7 +129,7 @@ func TestUDPMux(t *testing.T) { //nolint:cyclop
 func testMuxConnection(t *testing.T, udpMux *UDPMuxDefault, ufrag string, network string) {
 	t.Helper()
 
-	pktConn, err := udpMux.GetConn(ufrag, udpMux.LocalAddr())
+	pktConn, err := udpMux.GetConn(ufrag, udpMux.LocalAddr(), "candidate-"+ufrag)
 	require.NoError(t, err, "error retrieving muxed connection for ufrag")
 	defer func() {
 		_ = pktConn.Close()
